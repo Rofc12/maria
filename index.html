@@ -72,21 +72,21 @@
     100%{ transform: translateY(-115vh) rotate(25deg); opacity:0; }
   }
 
-  .card{
+    .card{
     position:relative;
     z-index:1;
     width:100%;
-    max-width:420px;
+    max-width:460px;
     background: var(--card);
     border:1px solid var(--card-line);
     border-radius:28px;
-    padding: 36px 26px 32px;
+    padding: 42px 28px 38px;
     box-shadow: 0 24px 60px -20px var(--shadow), 0 2px 0 0 var(--card-line) inset;
     text-align:center;
   }
 
-  .eyebrow{
-    font-size:.72rem;
+    .eyebrow{
+    font-size:.8rem;
     font-weight:700;
     letter-spacing:.14em;
     text-transform:uppercase;
@@ -94,8 +94,8 @@
     margin:0 0 10px;
   }
 
-  .question{
-    font-size: clamp(1.9rem, 8vw, 2.5rem);
+   .question{
+    font-size: clamp(2.3rem, 9.5vw, 3rem);
     font-weight:700;
     color: var(--ink);
     line-height:1.15;
@@ -106,10 +106,10 @@
     color: var(--accent);
   }
 
-  .message{
+   .message{
     min-height: 1.6em;
     margin: 18px 0 4px;
-    font-size: 1rem;
+    font-size: 1.15rem;
     font-weight:600;
     color: var(--ink-soft);
     transition: opacity .15s ease;
@@ -127,10 +127,10 @@
   .btn{
     font-family:"Quicksand","Nunito",sans-serif;
     font-weight:700;
-    font-size:1.05rem;
+    font-size:1.25rem;
     border-radius:999px;
     border:none;
-    padding: 15px 30px;
+    padding: 18px 36px;
     cursor:pointer;
     touch-action: manipulation;
     user-select:none;
@@ -186,10 +186,10 @@
     margin-top:18px;
     min-height:0;
   }
-  .gif-dock img{
+   .gif-dock img{
     display:block;
     width:100%;
-    max-width:260px;
+    max-width:310px;
     margin:0 auto;
     border-radius:18px;
     border: 3px solid #fff;
@@ -203,10 +203,10 @@
     100%{ transform: scale(1) rotate(0deg); opacity:1; }
   }
 
-  .celeb-gif{
+   .celeb-gif{
     display:block;
     width:100%;
-    max-width:280px;
+    max-width:330px;
     margin: 4px auto 18px;
     border-radius:18px;
     border: 3px solid #fff;
@@ -252,8 +252,8 @@
     max-width:380px;
   }
 
-  .big-heart{
-    font-size: 4rem;
+   .big-heart{
+    font-size: 4.6rem;
     animation: heartbeat 1.1s ease-in-out infinite;
     filter: drop-shadow(0 10px 18px rgba(150,0,50,.35));
   }
@@ -264,16 +264,16 @@
     60%{ transform:scale(1.1); }
   }
 
-  .celebration-content h2{
+   .celebration-content h2{
     color:#fff;
-    font-size: clamp(1.6rem, 7vw, 2.1rem);
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
     margin-top:10px;
     text-shadow: 0 4px 16px rgba(120,0,40,.35);
   }
   .celebration-content p{
     color:#fff;
     font-weight:600;
-    font-size:1.02rem;
+    font-size:1.18rem;
     margin: 10px 0 26px;
     opacity:.96;
   }
@@ -312,20 +312,20 @@
 
   /* loading screen */
   .loading-screen{ gap:18px; padding: 12px; }
-  .loading-icon{
-    font-size:3.2rem;
+   .loading-icon{
+    font-size:3.6rem;
     animation: heartbeat 1.3s ease-in-out infinite;
     filter: drop-shadow(0 10px 18px rgba(120,0,40,.35));
   }
   .loading-text{
     color:#fff;
     font-weight:700;
-    font-size:1.05rem;
+    font-size:1.2rem;
     text-shadow: 0 2px 10px rgba(120,0,40,.35);
   }
   .progress-track{
-    width:min(280px, 80vw);
-    height:14px;
+    width:min(320px, 85vw);
+    height:16px;
     background: rgba(255,255,255,.35);
     border:1px solid rgba(255,255,255,.55);
     border-radius:999px;
@@ -349,12 +349,12 @@
 
   /* envelope screen */
   .envelope-screen{ gap:20px; }
-  .envelope{
+    .envelope{
     position:relative;
-    width:230px;
-    height:150px;
-    max-width:70vw;
-    aspect-ratio: 230 / 150;
+    width:260px;
+    height:170px;
+    max-width:74vw;
+    aspect-ratio: 260 / 170;
     border:none;
     background:none;
     padding:0;
@@ -393,13 +393,13 @@
     transition: transform .55s cubic-bezier(.22,1,.36,1);
     z-index:1;
   }
-  .envelope-flap{
+    .envelope-flap{
     position:absolute;
     top:0; left:0; right:0;
     height:0;
-    border-left: 115px solid transparent;
-    border-right: 115px solid transparent;
-    border-top: 76px solid var(--accent);
+    border-left: 130px solid transparent;
+    border-right: 130px solid transparent;
+    border-top: 86px solid var(--accent);
     transform-origin: 50% 0%;
     transition: transform .55s cubic-bezier(.4,0,.2,1);
     z-index:2;
@@ -422,10 +422,10 @@
     transform: translate(-50%,-160%) scale(.6);
   }
 
-  .envelope-hint{
+   .envelope-hint{
     color:#fff;
     font-weight:600;
-    font-size:1rem;
+    font-size:1.15rem;
     text-shadow: 0 2px 8px rgba(120,0,40,.35);
     transition: opacity .3s ease;
   }
