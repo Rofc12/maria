@@ -1,0 +1,809 @@
+<title>maria manca</title>
+<style>
+  :root{
+    --bg-a:#ffe1ec;
+    --bg-b:#ff9ab6;
+    --bg-c:#ff5089;
+    --card:#fff7fa;
+    --card-line:#ffd3e2;
+    --ink:#4a1030;
+    --ink-soft:#8a4064;
+    --accent:#ff2f6b;
+    --accent-dark:#d90f52;
+    --accent-ink:#ffffff;
+    --no-bg:#ffffff;
+    --no-ink:#b23a63;
+    --no-line:#ffcfe0;
+    --shadow:rgba(196,16,72,.28);
+    color-scheme: light;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    background:
+      radial-gradient(120% 90% at 50% -10%, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+    color: var(--ink);
+    font-family: "Quicksand","Nunito",-apple-system,sans-serif;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,h2{
+    font-family:"Fredoka","Quicksand",sans-serif;
+    text-wrap: balance;
+    margin:0;
+  }
+
+  .stage{
+    position:relative;
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-inline:16px;
+    padding-block:32px;
+    isolation:isolate;
+  }
+
+  /* ambient floating hearts */
+  .bg-hearts{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .bg-hearts span{
+    position:absolute;
+    bottom:-10%;
+    font-size:1.4rem;
+    opacity:.35;
+    animation-name: drift-up;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    filter: drop-shadow(0 2px 4px rgba(196,16,72,.15));
+  }
+  @keyframes drift-up{
+    0%{ transform: translateY(0) rotate(0deg); opacity:0; }
+    10%{ opacity:.45; }
+    90%{ opacity:.35; }
+    100%{ transform: translateY(-115vh) rotate(25deg); opacity:0; }
+  }
+
+  .card{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:420px;
+    background: var(--card);
+    border:1px solid var(--card-line);
+    border-radius:28px;
+    padding: 36px 26px 32px;
+    box-shadow: 0 24px 60px -20px var(--shadow), 0 2px 0 0 var(--card-line) inset;
+    text-align:center;
+  }
+
+  .eyebrow{
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color: var(--accent);
+    margin:0 0 10px;
+  }
+
+  .question{
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
+    font-weight:700;
+    color: var(--ink);
+    line-height:1.15;
+  }
+
+  .question em{
+    font-style:normal;
+    color: var(--accent);
+  }
+
+  .message{
+    min-height: 1.6em;
+    margin: 18px 0 4px;
+    font-size: 1rem;
+    font-weight:600;
+    color: var(--ink-soft);
+    transition: opacity .15s ease;
+  }
+
+  .buttons{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    align-items:center;
+    margin-top:22px;
+    min-height:64px;
+  }
+
+  .btn{
+    font-family:"Quicksand","Nunito",sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    border-radius:999px;
+    border:none;
+    padding: 15px 30px;
+    cursor:pointer;
+    touch-action: manipulation;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+
+  .btn-yes{
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: var(--accent-ink);
+    box-shadow: 0 10px 24px -8px var(--shadow);
+    transform: scale(var(--yes-scale, 1));
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .btn-no{
+    background: var(--no-bg);
+    color: var(--no-ink);
+    border: 1.5px solid var(--no-line);
+    position: static;
+    z-index: 5;
+  }
+  .btn-no.is-fixed{
+    position: fixed;
+    top:0; left:0;
+    transition: left .14s cubic-bezier(.3,.7,.4,1), top .14s cubic-bezier(.3,.7,.4,1);
+  }
+  .btn-no.is-fixed.no-anim{
+    transition: none;
+  }
+  .btn-no.is-popping{
+    animation: pop-flourish .18s ease-out;
+  }
+  @keyframes pop-flourish{
+    0%{ transform: scale(1); }
+    45%{ transform: scale(.88,1.1); }
+    100%{ transform: scale(1); }
+  }
+  .btn-no[hidden]{ display:none; }
+
+  .poof{
+    position:fixed;
+    z-index:6;
+    pointer-events:none;
+    font-size:1.1rem;
+    animation: poof-out .55s ease-out forwards;
+  }
+  @keyframes poof-out{
+    0%{ transform: translate(0,0) scale(1); opacity:.9; }
+    100%{ transform: var(--poof-end) scale(.3); opacity:0; }
+  }
+
+  .gif-dock{
+    margin-top:18px;
+    min-height:0;
+  }
+  .gif-dock img{
+    display:block;
+    width:100%;
+    max-width:260px;
+    margin:0 auto;
+    border-radius:18px;
+    border: 3px solid #fff;
+    box-shadow: 0 14px 30px -12px var(--shadow);
+    background: var(--bg-a);
+    animation: gif-pop .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  .gif-dock img[hidden]{ display:none; }
+  @keyframes gif-pop{
+    0%{ transform: scale(.6) rotate(-4deg); opacity:0; }
+    100%{ transform: scale(1) rotate(0deg); opacity:1; }
+  }
+
+  .celeb-gif{
+    display:block;
+    width:100%;
+    max-width:280px;
+    margin: 4px auto 18px;
+    border-radius:18px;
+    border: 3px solid #fff;
+    box-shadow: 0 14px 34px -10px rgba(120,0,40,.45);
+  }
+
+  /* celebration overlay */
+  .celebration{
+    position:fixed;
+    inset:0;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px 16px;
+    background: radial-gradient(120% 90% at 50% 0%, rgba(255,225,236,.97) 0%, rgba(255,110,150,.97) 60%, rgba(255,40,100,.97) 100%);
+  }
+  .celebration[hidden]{ display:none; }
+
+  .confetti-layer{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .confetti-layer span{
+    position:absolute;
+    top:-8%;
+    font-size:1.3rem;
+    animation-name: fall-down;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  @keyframes fall-down{
+    0%{ transform: translateY(0) rotate(0deg); opacity:1; }
+    100%{ transform: translateY(112vh) rotate(300deg); opacity:.9; }
+  }
+
+  .celebration-content{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    max-width:380px;
+  }
+
+  .big-heart{
+    font-size: 4rem;
+    animation: heartbeat 1.1s ease-in-out infinite;
+    filter: drop-shadow(0 10px 18px rgba(150,0,50,.35));
+  }
+  @keyframes heartbeat{
+    0%,100%{ transform:scale(1); }
+    25%{ transform:scale(1.15); }
+    45%{ transform:scale(.98); }
+    60%{ transform:scale(1.1); }
+  }
+
+  .celebration-content h2{
+    color:#fff;
+    font-size: clamp(1.6rem, 7vw, 2.1rem);
+    margin-top:10px;
+    text-shadow: 0 4px 16px rgba(120,0,40,.35);
+  }
+  .celebration-content p{
+    color:#fff;
+    font-weight:600;
+    font-size:1.02rem;
+    margin: 10px 0 26px;
+    opacity:.96;
+  }
+
+  .btn-again{
+    background:#fff;
+    color: var(--accent-dark);
+    box-shadow: 0 10px 24px -10px rgba(0,0,0,.35);
+  }
+
+  /* screen transitions shared by loading / envelope / question card */
+  .app-screen{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .app-screen[hidden]{ display:none; }
+  /* no transform here on purpose: a lingering transform (even an identity
+     one held by animation-fill-mode) turns this into a new containing
+     block, which would hijack any position:fixed descendant (like the
+     dodging NO button) away from the viewport. Opacity-only is safe. */
+  .app-screen.screen-exit{
+    opacity:0;
+    transition: opacity .4s ease;
+    pointer-events:none;
+  }
+  @keyframes app-screen-in{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+  .app-screen.screen-enter{
+    animation: app-screen-in .45s ease both;
+  }
+
+  /* loading screen */
+  .loading-screen{ gap:18px; padding: 12px; }
+  .loading-icon{
+    font-size:3.2rem;
+    animation: heartbeat 1.3s ease-in-out infinite;
+    filter: drop-shadow(0 10px 18px rgba(120,0,40,.35));
+  }
+  .loading-text{
+    color:#fff;
+    font-weight:700;
+    font-size:1.05rem;
+    text-shadow: 0 2px 10px rgba(120,0,40,.35);
+  }
+  .progress-track{
+    width:min(280px, 80vw);
+    height:14px;
+    background: rgba(255,255,255,.35);
+    border:1px solid rgba(255,255,255,.55);
+    border-radius:999px;
+    overflow:hidden;
+    box-shadow: inset 0 2px 5px rgba(120,0,40,.18);
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, #ffffff, #ffe3ec);
+    border-radius:999px;
+    box-shadow: 0 0 12px rgba(255,255,255,.85);
+  }
+  .progress-pct{
+    color:#fff;
+    font-weight:700;
+    font-size:.95rem;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 8px rgba(120,0,40,.35);
+  }
+
+  /* envelope screen */
+  .envelope-screen{ gap:20px; }
+  .envelope{
+    position:relative;
+    width:230px;
+    height:150px;
+    max-width:70vw;
+    aspect-ratio: 230 / 150;
+    border:none;
+    background:none;
+    padding:0;
+    margin:0 auto;
+    cursor:pointer;
+    -webkit-tap-highlight-color: transparent;
+    perspective: 500px;
+    animation: envelope-float 2.6s ease-in-out infinite;
+  }
+  .envelope:active{ transform: scale(.96); }
+  .envelope.is-open{ animation:none; }
+  @keyframes envelope-float{
+    0%,100%{ transform: translateY(0) scale(1); }
+    50%{ transform: translateY(-7px) scale(1.015); }
+  }
+
+  .envelope-back{
+    position:absolute;
+    inset:0;
+    background: linear-gradient(180deg, #ffffff 0%, var(--card) 100%);
+    border:1px solid var(--card-line);
+    border-radius:14px;
+    box-shadow: 0 22px 42px -18px var(--shadow);
+  }
+  .envelope-letter{
+    position:absolute;
+    left:11%;
+    right:11%;
+    top:10%;
+    height:76%;
+    background:#fff;
+    border-radius:8px;
+    border:1px solid var(--card-line);
+    box-shadow: 0 8px 16px rgba(196,16,72,.15);
+    transform: translateY(0);
+    transition: transform .55s cubic-bezier(.22,1,.36,1);
+    z-index:1;
+  }
+  .envelope-flap{
+    position:absolute;
+    top:0; left:0; right:0;
+    height:0;
+    border-left: 115px solid transparent;
+    border-right: 115px solid transparent;
+    border-top: 76px solid var(--accent);
+    transform-origin: 50% 0%;
+    transition: transform .55s cubic-bezier(.4,0,.2,1);
+    z-index:2;
+    filter: drop-shadow(0 8px 10px rgba(196,16,72,.2));
+  }
+  .envelope-seal{
+    position:absolute;
+    top:32%;
+    left:50%;
+    font-size:1.5rem;
+    transform: translate(-50%,-50%);
+    z-index:3;
+    transition: opacity .3s ease, transform .3s ease;
+    filter: drop-shadow(0 3px 6px rgba(150,0,50,.35));
+  }
+  .envelope.is-open .envelope-flap{ transform: rotateX(180deg); }
+  .envelope.is-open .envelope-letter{ transform: translateY(-46%); }
+  .envelope.is-open .envelope-seal{
+    opacity:0;
+    transform: translate(-50%,-160%) scale(.6);
+  }
+
+  .envelope-hint{
+    color:#fff;
+    font-weight:600;
+    font-size:1rem;
+    text-shadow: 0 2px 8px rgba(120,0,40,.35);
+    transition: opacity .3s ease;
+  }
+  .envelope-hint.fade-out{ opacity:0; }
+  .hint-tap{
+    display:inline-block;
+    animation: tap-bounce 1.1s ease-in-out infinite;
+  }
+  @keyframes tap-bounce{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .bg-hearts span, .btn-no.is-popping, .poof, .confetti-layer span, .big-heart,
+    .loading-icon, .envelope, .hint-tap{
+      animation: none !important;
+    }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+<div class="stage" id="stage">
+  <div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
+
+  <section class="app-screen loading-screen" id="loadingScreen">
+    <div class="loading-icon">💌</div>
+    <p class="loading-text">Preparando algo especial...</p>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <p class="progress-pct" id="progressPct">0%</p>
+  </section>
+
+  <section class="app-screen envelope-screen" id="envelopeScreen" hidden>
+    <button class="envelope" id="envelopeBtn" type="button" aria-label="Abrir la carta">
+      <span class="envelope-back"></span>
+      <span class="envelope-letter"></span>
+      <span class="envelope-flap"></span>
+      <span class="envelope-seal">💗</span>
+    </button>
+    <p class="envelope-hint" id="envelopeHint">Toca la carta para abrirla <span class="hint-tap" aria-hidden="true">👆</span></p>
+  </section>
+
+  <main class="app-screen card" id="questionCard" hidden>
+    <p class="eyebrow">Pregunta importante</p>
+    <h1 class="question">MARIA,<br><em>¿ME AMAS?</em></h1>
+    <p class="message" id="message" aria-live="polite">&nbsp;</p>
+
+    <div class="buttons" id="buttons">
+      <button class="btn btn-yes" id="btnYes" type="button" style="--yes-scale:1">SÍ</button>
+      <button class="btn btn-no" id="btnNo" type="button">NO</button>
+    </div>
+
+    <div class="gif-dock" id="gifDock">
+      <img id="gifImg" src="" alt="" hidden referrerpolicy="no-referrer" loading="eager">
+    </div>
+  </main>
+</div>
+
+<div class="celebration" id="celebration" hidden>
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+  <div class="celebration-content">
+    <div class="big-heart">💖</div>
+    <h2>¡Lo sabía!</h2>
+    <img class="celeb-gif" src="https://media1.tenor.com/m/q7LlziXHJWEAAAAC/yes-celebration.gif" alt="Celebración de alegría" referrerpolicy="no-referrer" loading="eager">
+    <p id="celebrationText">Ya sabia que ya me amas, fue rapido amarnos</p>
+    <button class="btn btn-again" id="btnAgain" type="button">BOT</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var stage = document.getElementById('stage');
+  var btnYes = document.getElementById('btnYes');
+  var btnNo = document.getElementById('btnNo');
+  var buttons = document.getElementById('buttons');
+  var message = document.getElementById('message');
+  var celebration = document.getElementById('celebration');
+  var confettiLayer = document.getElementById('confettiLayer');
+  var btnAgain = document.getElementById('btnAgain');
+  var bgHearts = document.getElementById('bgHearts');
+  var gifImg = document.getElementById('gifImg');
+
+  var loadingScreen = document.getElementById('loadingScreen');
+  var envelopeScreen = document.getElementById('envelopeScreen');
+  var questionCard = document.getElementById('questionCard');
+  var progressFill = document.getElementById('progressFill');
+  var progressPct = document.getElementById('progressPct');
+  var envelopeBtn = document.getElementById('envelopeBtn');
+  var envelopeHint = document.getElementById('envelopeHint');
+
+  function swapScreen(fromEl, toEl, delayBeforeExit){
+    setTimeout(function(){
+      fromEl.classList.add('screen-exit');
+      setTimeout(function(){
+        fromEl.hidden = true;
+        fromEl.classList.remove('screen-exit');
+        toEl.hidden = false;
+        toEl.classList.remove('screen-enter');
+        void toEl.offsetWidth;
+        toEl.classList.add('screen-enter');
+        toEl.addEventListener('animationend', function handler(){
+          toEl.classList.remove('screen-enter');
+          toEl.removeEventListener('animationend', handler);
+        });
+      }, 420);
+    }, delayBeforeExit || 0);
+  }
+
+  function runLoading(){
+    var duration = 5000; /* la barra se llena en ~5s */
+    var start = null;
+
+    function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+    function frame(ts){
+      if (start === null) start = ts;
+      var elapsed = ts - start;
+      var t = Math.min(1, elapsed / duration);
+      var pct = Math.round(easeOutCubic(t) * 100);
+      progressFill.style.width = pct + '%';
+      progressPct.textContent = pct + '%';
+      if (t < 1){
+        requestAnimationFrame(frame);
+      } else {
+        swapScreen(loadingScreen, envelopeScreen, 300);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function openEnvelope(){
+    if (envelopeBtn.classList.contains('is-open')) return;
+    envelopeBtn.classList.add('is-open');
+    envelopeHint.classList.add('fade-out');
+    if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function'){
+      try { navigator.vibrate(30); } catch (e) { /* ignore */ }
+    }
+    swapScreen(envelopeScreen, questionCard, 650);
+  }
+
+  envelopeBtn.addEventListener('click', openEnvelope);
+
+   var NO_GIFS = [
+    { url: "https://media1.tenor.com/m/HE6jJJe36fkAAAAC/apapacho-abrazame.gif", alt: "Homero pidiendo un abrazo, apapáchame quiéreme" },
+    { url: "https://media1.tenor.com/m/d2T0KnObasEAAAAC/hug-baymax.gif", alt: "Baymax dando un abrazo" },
+    { url: "https://media1.tenor.com/m/womYasDJdbwAAAAC/stitch-angel.gif", alt: "Stitch y Angel abrazándose enamorados" },
+    { url: "https://media1.tenor.com/m/5E7vwYryLAAAAAAC/winnie-the-pooh-tigger.gif", alt: "Winnie Pooh y Tigger abrazándose" },
+    { url: "https://media1.tenor.com/m/XMnlQ2qHrQEAAAAC/olaf-frozen.gif", alt: "Olaf regalando abrazos cálidos" },
+    { url: "https://media1.tenor.com/m/YpiXPbz5f5sAAAAC/lilo-and-stitch-hug.gif", alt: "Lilo y Stitch abrazándose y dándose un beso" }
+  ];
+  var lastGifIndex = -1;
+
+  function pickGif(){
+    var i = Math.floor(Math.random() * NO_GIFS.length);
+    if (i === lastGifIndex) i = (i + 1) % NO_GIFS.length;
+    lastGifIndex = i;
+    return NO_GIFS[i];
+  }
+
+  function showGif(){
+    var g = pickGif();
+    gifImg.hidden = true;
+    gifImg.style.animation = 'none';
+    gifImg.onerror = function(){ gifImg.hidden = true; };
+    gifImg.onload = function(){
+      gifImg.hidden = false;
+      void gifImg.offsetWidth;
+      gifImg.style.animation = '';
+    };
+    gifImg.alt = g.alt;
+    gifImg.src = g.url;
+  }
+
+  var MESSAGES = [
+    "¿Segura? 🤔",
+    "manca",
+    "¡Uy, casi! Pero no 😏",
+    "Ese botón tiene vida propia 🏃‍♀️💨",
+    "El NO no vive aquí ",
+    "¿De verdad ibas a decir que no? 😳",
+    "Inténtalo otra vez... o no 😌",
+    "El universo no lo permite 🌌",
+    "Nooo, así no es como funciona esto 😂",
+    "Sigue intentando, a ver si lo alcanzas 👀",
+    "María, solo hay una respuesta correcta 💖"
+  ];
+  var lastMsgIndex = -1;
+  var attempts = 0;
+  var canVibrate = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
+
+  function pickMessage(){
+    var i = Math.floor(Math.random() * MESSAGES.length);
+    if (i === lastMsgIndex) i = (i + 1) % MESSAGES.length;
+    lastMsgIndex = i;
+    return MESSAGES[i];
+  }
+
+  function spawnAmbientHearts(){
+    var glyphs = ['💗','💖','💕','✨'];
+    var n = 10;
+    for (var i = 0; i < n; i++){
+      var s = document.createElement('span');
+      s.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      s.style.left = (Math.random() * 96 + 2) + 'vw';
+      var dur = 7 + Math.random() * 6;
+      s.style.animationDuration = dur + 's';
+      s.style.animationDelay = (Math.random() * dur) + 's';
+      s.style.fontSize = (1 + Math.random() * 1.1) + 'rem';
+      bgHearts.appendChild(s);
+    }
+  }
+
+  function spawnPoof(x, y){
+    var glyphs = ['💥','✨','💫'];
+    var count = 5;
+    for (var i = 0; i < count; i++){
+      var p = document.createElement('span');
+      p.className = 'poof';
+      p.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      var angle = Math.random() * Math.PI * 2;
+      var dist = 40 + Math.random() * 50;
+      var dx = Math.cos(angle) * dist;
+      var dy = Math.sin(angle) * dist;
+      p.style.setProperty('--poof-end', 'translate(' + dx + 'px,' + dy + 'px)');
+      document.body.appendChild(p);
+      (function(el){
+        setTimeout(function(){ el.remove(); }, 600);
+      })(p);
+    }
+  }
+
+  function viewportSize(){
+    /* the smallest of several measurements, so the button never ends up
+       placed beyond what is actually visible on a mobile browser */
+    var vw = document.documentElement.clientWidth || window.innerWidth;
+    var vh = document.documentElement.clientHeight || window.innerHeight;
+    vw = Math.min(vw, window.innerWidth || vw);
+    vh = Math.min(vh, window.innerHeight || vh);
+    if (window.visualViewport){
+      vw = Math.min(vw, window.visualViewport.width);
+      vh = Math.min(vh, window.visualViewport.height);
+    }
+    return { w: vw, h: vh };
+  }
+
+  function clampedRandomPos(w, h){
+    var margin = 20;
+    var vp = viewportSize();
+    var maxX = Math.max(margin, vp.w - w - margin);
+    var maxY = Math.max(margin, vp.h - h - margin);
+    var x = margin + Math.random() * Math.max(0, maxX - margin);
+    var y = margin + Math.random() * Math.max(0, maxY - margin);
+    return { x: x, y: y };
+  }
+
+  function growYes(){
+    var scale = Math.min(1 + attempts * 0.14, 1.9);
+    btnYes.style.setProperty('--yes-scale', scale.toFixed(3));
+  }
+
+  function dodge(evt){
+    if (btnNo.hidden) return;
+    if (evt && evt.cancelable) evt.preventDefault();
+
+    var rect = btnNo.getBoundingClientRect();
+    spawnPoof(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+    if (!btnNo.classList.contains('is-fixed')){
+      btnNo.classList.add('no-anim');
+      btnNo.style.width = rect.width + 'px';
+      btnNo.style.left = rect.left + 'px';
+      btnNo.style.top = rect.top + 'px';
+      btnNo.classList.add('is-fixed');
+      // commit the starting position before re-enabling the slide transition
+      void btnNo.offsetWidth;
+      btnNo.classList.remove('no-anim');
+    }
+
+    attempts++;
+    var w = btnNo.offsetWidth;
+    var h = btnNo.offsetHeight;
+    var pos = clampedRandomPos(w, h);
+    btnNo.style.left = pos.x + 'px';
+    btnNo.style.top = pos.y + 'px';
+
+    btnNo.classList.remove('is-popping');
+    void btnNo.offsetWidth;
+    btnNo.classList.add('is-popping');
+
+    message.textContent = pickMessage();
+    showGif();
+    growYes();
+
+    if (canVibrate){
+      try { navigator.vibrate(45); } catch (e) { /* ignore */ }
+    }
+  }
+
+  function fireConfetti(){
+    confettiLayer.innerHTML = '';
+    var glyphs = ['💖','💕','💗','✨','💘','🎉'];
+    var n = 40;
+    for (var i = 0; i < n; i++){
+      var s = document.createElement('span');
+      s.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      s.style.left = (Math.random() * 100) + 'vw';
+      var dur = 2.4 + Math.random() * 2.2;
+      s.style.animationDuration = dur + 's';
+      s.style.animationDelay = (Math.random() * 1.1) + 's';
+      s.style.fontSize = (1 + Math.random() * 1.2) + 'rem';
+      confettiLayer.appendChild(s);
+    }
+  }
+
+  function sayYes(){
+    fireConfetti();
+    celebration.hidden = false;
+    if (canVibrate){
+      try { navigator.vibrate([30, 60, 30, 60, 80]); } catch (e) { /* ignore */ }
+    }
+  }
+
+  function resetAll(){
+    attempts = 0;
+    lastMsgIndex = -1;
+    btnYes.style.setProperty('--yes-scale', '1');
+    btnNo.hidden = false;
+    btnNo.classList.remove('is-fixed', 'is-popping', 'no-anim');
+    btnNo.style.position = '';
+    btnNo.style.left = '';
+    btnNo.style.top = '';
+    btnNo.style.width = '';
+    message.textContent = ' ';
+    celebration.hidden = true;
+    confettiLayer.innerHTML = '';
+    gifImg.hidden = true;
+    gifImg.src = '';
+    lastGifIndex = -1;
+  }
+
+  btnNo.addEventListener('pointerdown', dodge, { passive: false });
+  btnNo.addEventListener('focus', function(){
+    btnNo.blur();
+    dodge({ cancelable: false });
+  });
+  btnNo.addEventListener('click', function(evt){ evt.preventDefault(); });
+
+  btnYes.addEventListener('click', sayYes);
+  btnAgain.addEventListener('click', resetAll);
+
+  function reclampNoButton(){
+    if (!btnNo.classList.contains('is-fixed') || btnNo.hidden) return;
+    var w = btnNo.offsetWidth;
+    var h = btnNo.offsetHeight;
+    var vp = viewportSize();
+    var maxX = Math.max(20, vp.w - w - 20);
+    var maxY = Math.max(20, vp.h - h - 20);
+    var curX = parseFloat(btnNo.style.left) || 0;
+    var curY = parseFloat(btnNo.style.top) || 0;
+    btnNo.classList.add('no-anim');
+    btnNo.style.left = Math.min(curX, maxX) + 'px';
+    btnNo.style.top = Math.min(curY, maxY) + 'px';
+    void btnNo.offsetWidth;
+    btnNo.classList.remove('no-anim');
+  }
+
+  window.addEventListener('resize', reclampNoButton);
+  if (window.visualViewport){
+    window.visualViewport.addEventListener('resize', reclampNoButton);
+  }
+
+  spawnAmbientHearts();
+  runLoading();
+})();
+</script>
